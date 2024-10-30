@@ -1,5 +1,5 @@
-#TO RUNNING IT SUCCESSFULLY, YOU NEED ADDITIONAL LIBRARIES(pandas and openpyxl)
-#TO INSTALL THESE, INPUT THE FOLLOWING COMMAND "pip install pandas" AND "pip install openpyxl" SEPERATELY IN YOUR TERMINAL
+#TO RUNNING IT SUCCESSFULLY, ADDITIONAL LIBRARIES IS REQUIRED (pandas and openpyxl)
+#TO INSTALL ADDITIONAL LIBRARIES, INPUT THE FOLLOWING COMMAND "pip install pandas" AND "pip install openpyxl" SEPERATELY IN YOUR TERMINAL
 import pandas as pd
 import random
 from datetime import datetime
@@ -45,7 +45,7 @@ if option == "1":
     num = list2.count(studentID)
 
     #When rented lockers < 2
-    print(num) #This for testing number
+    print(num) #This for testing number and will be deleted
     if num < 2:
         while True:
             rentalID = generate_num()
