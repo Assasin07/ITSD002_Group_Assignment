@@ -45,7 +45,7 @@ if option == "1":
     num = list2.count(studentID)
 
     #When rented lockers < 2
-    print(num)
+    print(num) #This for testing number
     if num < 2:
         while True:
             rentalID = generate_num()
@@ -56,7 +56,7 @@ if option == "1":
                 break
 
         startDate = datetime.now()
-        df = pd.read_excel(path, sheet_name="lockers", )
+        df = pd.read_excel(path, sheet_name="lockers")
         valid_range = df["Locker ID"].notna().sum()
 
         for index, value in df["Status"].items():
