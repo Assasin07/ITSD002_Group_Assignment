@@ -1,5 +1,5 @@
 #TO RUNNING IT SUCCESSFULLY, ADDITIONAL LIBRARIES IS REQUIRED (pandas and openpyxl)
-#TO INSTALL ADDITIONAL LIBRARIES, INPUT THE FOLLOWING COMMAND "pip install pandas" AND "pip install openpyxl" SEPERATELY IN YOUR TERMINAL
+#TO INSTALL ADDITIONAL LIBRARIES, INPUT THE FOLLOWING COMMANDS "pip install pandas" AND "pip install openpyxl" SEPERATELY IN THE TERMINAL
 import pandas as pd
 import random
 from datetime import datetime
