@@ -4,6 +4,7 @@ import pandas as pd
 import random
 from datetime import datetime
 
+#Please modify this path to make sure that excel file can be navigated correctly
 path = "C:/Users/Hot945/Desktop/info.xlsx"
 
 #Introduce Sequential Search function
@@ -13,7 +14,7 @@ def sequential_search(arr, x):
             return i
     return -1
 
-#Introduce a function to gen random num
+#Introduce a function to gen random number
 def generate_num():
     return random.randint(1000000, 9999999)
 
@@ -21,6 +22,8 @@ def generate_num():
 def get_column_list(sheet_name_input, column_name_input):
     df = pd.read_excel(path, sheet_name=sheet_name_input)
     return df[column_name_input].tolist()
+
+
 
 #Display STUDENT MENU
 print("++++ Go Locker – Operations ++++\n1. Rent a lock\n2. Request move\n3. Return locker\n4. Enquire locker location\n5. View usage report\n0. Exit")
@@ -84,6 +87,9 @@ if option == "1":
                 print("$2 is charge to your account.")
                 print("-" * 50)
                 break
+
+            else:
+                print("Sorry, all lockers are full")
 
     #When rented lockers = 2
     else:
