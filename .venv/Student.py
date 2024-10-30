@@ -1,8 +1,7 @@
 #TO RUNNING IT SUCCESSFULLY, YOU NEED ADDITIONAL LIBRARIES(pandas and openpyxl)
 #TO INSTALL THESE, INPUT THE FOLLOWING COMMAND "pip install pandas" AND "pip install openpyxl" SEPERATELY IN YOUR TERMINAL
-from operator import truediv
-
 import pandas as pd
+import random
 
 #Introduce Sequential Search function
 def sequential_search(arr, x):
@@ -11,6 +10,15 @@ def sequential_search(arr, x):
             return i
     return -1
 
+#Introduce a function to gen random num
+def generate_num():
+    return random.randint(1000000, 9999999)
+
+#Introduce a funtion to transform Excel column data into Python list
+def get_column_list(sheet_name_input, column_name_input):
+    df = pd.read_excel("C:/Users/Hot945/Desktop/info.xlsx", sheet_name=sheet_name_input)
+    return df[column_name_input].tolist()
+
 #Display STUDENT MENU
 print("++++ Go Locker – Operations ++++\n1. Rent a lock\n2. Request move\n3. Return locker\n4. Enquire locker location\n5. View usage report\n0. Exit")
 
@@ -18,9 +26,7 @@ option = input("Enter option: ")
 
 # <Rent a lock> Part
 if option == "1":
-    df = pd.read_excel("C:/Users/Hot945/Desktop/info.xlsx", sheet_name="students")
-    column_name = "Student ID"
-    list1 = df[column_name].tolist()
+    list1 = get_column_list("students", "Student ID")
 
     while True:
         studentID = int(input("Enter Student ID: "))
@@ -32,17 +38,21 @@ if option == "1":
             print("Invalid student ID, please re-enter.")
 
     #Judging the number of lockers student had rented
-    df = pd.read_excel("C:/Users/Hot945/Desktop/info.xlsx", sheet_name="lockers")
-    column_name = "Student ID"
-    list2 = df[column_name].tolist()
-
+    list2 = get_column_list("lockers", "Student ID")
     num = 0
     for i in range(len(list2)):
         if sequential_search(list2, studentID) != -1:
             num += 1
     #When rented lockers < 2
     if num < 2:
-        print("testing")
+        while True:
+            lockerID = generate_num()
+            list3 = get_column_list("lockers", "Rental ID")
+            non_repeat_check = sequential_search(list3, lockerID)
+
+            if non_repeat_check == -1:
+                print(lockerID)
+                break
 
     #When rented lockers = 2
     else:
