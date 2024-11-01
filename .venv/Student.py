@@ -62,16 +62,18 @@ if option == "1":
         df = pd.read_excel(path, sheet_name="lockers")
         valid_range = df["Locker ID"].notna().sum()
 
+        found_locker = False
+
         for index, value in df["Status"].items():
             if index > valid_range:
                 break
 
-            if value not in ["Suspended", "Used"]:
+            if value not in ["Suspended", "Occupied"]:
                 df.at[index, "Rental ID"] = rentalID
                 df.at[index, "Student ID"] = studentID
-                df.at[index, "Status"] = "Used"
+                df.at[index, "Status"] = "Occupied"
                 df["Start Date"] = df["Start Date"].astype(str)
-                df.at[index, "Start Date"] = pd.to_datetime(startDate).strftime('%d-%b-%y')
+                df.at[index, "Start Date"] = pd.to_datetime(startDate).strftime('%d-%b-%Y')
                 df['Start Date'] = df['Start Date'].replace('nan', '')
 
                 lockerID = df.at[index, "Locker ID"]
@@ -83,13 +85,15 @@ if option == "1":
                 print("-" * 50, "\n")
                 print("Locker allocated:", lockerID, " ", "Location:", location, "\n")
                 print("Rental ID:", rentalID, "\n")
-                print("Start date:", startDate.strftime("%d-%b-%y"), "\n")
+                print("Start date:", startDate.strftime("%d-%b-%Y"), "\n")
                 print("$2 is charge to your account.")
                 print("-" * 50)
+
+                found_locker = True
                 break
 
-            else:
-                print("Sorry, all lockers are full")
+        if not found_locker:
+            print("Sorry, all lockers are full")
 
     #When rented lockers = 2
     else:
@@ -126,4 +130,14 @@ if option == "2":
         if matching_row.empty:
             print("Sorry, ", rentalID, " is not your locker.")
         else:
-            print("testing")
+            target = df[df["Rental ID"] == rentalID]
+            for index, row in target.iterrows():
+                lockerID = row["Locker ID"]
+                location = row["Location"]
+                startDate = row["Student ID"]
+
+                print("-" * 50, "\n")
+                print("Locker allocated:", lockerID, " ", "Location:", location, "\n")
+                print("Rental ID:", rentalID, "\n")
+                print("Start date:", startDate, "\n")
+                print("-" * 50, "\n")
