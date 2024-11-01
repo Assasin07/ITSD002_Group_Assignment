@@ -4,6 +4,8 @@ import pandas as pd
 import random
 from datetime import datetime
 
+from numpy.matlib import empty
+
 #Please modify this path to make sure that Excel file can be navigated correctly
 path = "C:/Users/Hot945/Desktop/info.xlsx"
 
@@ -146,6 +148,7 @@ if option == "2":
 
                 df = pd.read_excel(path, sheet_name="stations")
 
+                #Judging the input station availability
                 while True:
                     stationCode = input("Enter Station code to move to: ")
                     stationInfo = df[df["Station Code"] == stationCode]
@@ -153,10 +156,46 @@ if option == "2":
                         print("Invalid station code, please re-enter.")
                         continue
                     if stationInfo["Status"].iloc[0] == 'Closed':
-                        print("This station is unavailable now, please use other station.")
+                        print("This station is unavailable, please use other station.")
                         continue
 
+                    #Get row and col range
                     max_rows = stationInfo["Rows"].iloc[0]
                     max_columns = stationInfo["Columns"].iloc[0]
+                    print(max_rows, max_columns) #This for testing number and will be deleted
 
-                    print(max_rows, max_columns)
+                    #Create a list which contains all probability of station position
+                    available_position = []
+                    for row in range(1, max_rows + 1):
+                        for col in range(1, max_columns + 1):
+                            position = "%d,%d" % (row, col)
+                            available_position.append(position)
+
+                    station_df = pd.read_excel(path, sheet_name=stationCode)
+
+                    #Enquire the existing stored locker list
+                    position_column = "Position"
+                    occupied_position = []
+                    if not station_df.empty and position_column in station_df.columns:
+                        occupied_position = station_df[position_column].dropna().tolist()
+
+                    #Find the first available position
+                    empty_position = None
+                    for position in available_position:
+                        if position not in occupied_position:
+                            empty_position = position
+                            break
+
+                    if empty_position is None:
+                        print("This station is full. Please use other station.")
+                        continue
+
+                    #Find a row which both Rental ID and Position are empty to write data
+                    for index, row in station_df.iterrows():
+                        if pd.isna(row[position_column]) and pd.isna(row["Rental ID"]):
+                            station_df.loc[index, "Rental ID"] = rentalID
+                            station_df.loc[index, "Position"] = empty_position
+                            break
+
+                    with pd.ExcelWriter(path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+                        df.to_excel(writer, sheet_name=stationCode, index=False)
