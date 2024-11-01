@@ -121,23 +121,42 @@ if option == "2":
     studentID = int(input("Enter Student ID: "))
     found_row = df[df[found_column] == studentID]
 
+    #Judging whether Student ID is in the list
     if found_row.empty:
         print("You haven't rented any lockers.")
     else:
         rentalID = int(input("Enter Locker ID: "))
         matching_row = found_row[found_row[matching_column] == rentalID]
 
+        #Judging whether Rental ID is in the list
         if matching_row.empty:
-            print("Sorry, ", rentalID, " is not your locker.")
+            print("Sorry,", rentalID, "is not your locker.")
         else:
             target = df[df["Rental ID"] == rentalID]
             for index, row in target.iterrows():
                 lockerID = row["Locker ID"]
                 location = row["Location"]
-                startDate = row["Student ID"]
+                startDate = row["Start Date"]
 
                 print("-" * 50, "\n")
                 print("Locker allocated:", lockerID, " ", "Location:", location, "\n")
                 print("Rental ID:", rentalID, "\n")
                 print("Start date:", startDate, "\n")
-                print("-" * 50, "\n")
+                print("-" * 50)
+
+                df = pd.read_excel(path, sheet_name="stations")
+
+                while True:
+                    stationCode = input("Enter Station code to move to: ")
+                    stationInfo = df[df["Station Code"] == stationCode]
+                    if stationInfo.empty:
+                        print("Invalid station code, please re-enter.")
+                        continue
+                    if stationInfo["Status"].iloc[0] == 'Closed':
+                        print("This station is unavailable now, please use other station.")
+                        continue
+
+                    max_rows = stationInfo["Rows"].iloc[0]
+                    max_columns = stationInfo["Columns"].iloc[0]
+
+                    print(max_rows, max_columns)
