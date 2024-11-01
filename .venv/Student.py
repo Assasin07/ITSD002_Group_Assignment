@@ -4,8 +4,6 @@ import pandas as pd
 import random
 from datetime import datetime
 
-from numpy.matlib import empty
-
 #Please modify this path to make sure that Excel file can be navigated correctly
 path = "C:/Users/Hot945/Desktop/info.xlsx"
 
@@ -166,9 +164,9 @@ if option == "2":
 
                     #Create a list which contains all probability of station position
                     available_position = []
-                    for row in range(1, max_rows + 1):
-                        for col in range(1, max_columns + 1):
-                            position = "%d,%d" % (row, col)
+                    for rows in range(1, max_rows + 1):
+                        for cols in range(1, max_columns + 1):
+                            position = "%d,%d" % (rows, cols)
                             available_position.append(position)
 
                     station_df = pd.read_excel(path, sheet_name=stationCode)
@@ -191,10 +189,10 @@ if option == "2":
                         continue
 
                     #Find a row which both Rental ID and Position are empty to write data
-                    for index, row in station_df.iterrows():
-                        if pd.isna(row[position_column]) and pd.isna(row["Rental ID"]):
-                            station_df.loc[index, "Rental ID"] = rentalID
-                            station_df.loc[index, "Position"] = empty_position
+                    for index1, row1 in station_df.iterrows():
+                        if pd.isna(row1[position_column]) and pd.isna(row1["Rental ID"]):
+                            station_df.loc[index1, "Rental ID"] = rentalID
+                            station_df.loc[index1, "Position"] = empty_position
                             break
 
                     with pd.ExcelWriter(path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
