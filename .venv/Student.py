@@ -1,10 +1,10 @@
 #TO RUNNING IT SUCCESSFULLY, ADDITIONAL LIBRARIES IS REQUIRED (pandas and openpyxl)
-#TO INSTALL ADDITIONAL LIBRARIES, INPUT THE FOLLOWING COMMANDS "pip install pandas" AND "pip install openpyxl" SEPERATELY IN THE TERMINAL
+#TO INSTALL ADDITIONAL LIBRARIES, INPUT THE FOLLOWING COMMANDS "pip install pandas" AND "pip install openpyxl" SEPARATELY IN THE TERMINAL
 import pandas as pd
 import random
 from datetime import datetime
 
-#Please modify this path to make sure that excel file can be navigated correctly
+#Please modify this path to make sure that Excel file can be navigated correctly
 path = "C:/Users/Hot945/Desktop/info.xlsx"
 
 #Introduce Sequential Search function
@@ -18,7 +18,7 @@ def sequential_search(arr, x):
 def generate_num():
     return random.randint(1000000, 9999999)
 
-#Introduce a funtion to transform Excel column data into Python list
+#Introduce a function to transform Excel column data into Python list
 def get_column_list(sheet_name_input, column_name_input):
     df = pd.read_excel(path, sheet_name=sheet_name_input)
     return df[column_name_input].tolist()
@@ -114,5 +114,16 @@ if option == "2":
     found_column = "Student ID"
     matching_column = "Rental ID"
 
-    while True:
-        studentID = int(input("Enter Student ID: "))
+    studentID = int(input("Enter Student ID: "))
+    found_row = df[df[found_column] == studentID]
+
+    if found_row.empty:
+        print("You haven't rented any lockers.")
+    else:
+        rentalID = int(input("Enter Locker ID: "))
+        matching_row = found_row[found_row[matching_column] == rentalID]
+
+        if matching_row.empty:
+            print("Sorry, ", rentalID, " is not your locker.")
+        else:
+            print("testing")
