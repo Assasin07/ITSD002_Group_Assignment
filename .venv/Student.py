@@ -94,7 +94,7 @@ if option == "1":
     #When rented lockers = 2
     else:
         print("Sorry, you are already renting 2 lockers.")
-        df = pd.read_excel(path, sheet_name="lockers", )
+        df = pd.read_excel(path, sheet_name="lockers")
         target = df[df["Student ID"] == studentID]
         for index, row in target.iterrows():
             lockerID = row["Locker ID"]
@@ -108,7 +108,11 @@ if option == "1":
             print("Start date:", startDate, "\n")
             print("-" * 50)
 
+# <Request move> Part
+if option == "2":
+    df = pd.read_excel(path, sheet_name="lockers")
+    found_column = "Student ID"
+    matching_column = "Rental ID"
 
-
-
-
+    while True:
+        studentID = int(input("Enter Student ID: "))
