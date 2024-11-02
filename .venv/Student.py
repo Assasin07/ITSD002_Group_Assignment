@@ -156,44 +156,73 @@ if option == "2":
                     if stationInfo["Status"].iloc[0] == 'Closed':
                         print("This station is unavailable, please use other station.")
                         continue
+                    else:
+                        break
 
-                    #Get row and col range
-                    max_rows = stationInfo["Rows"].iloc[0]
-                    max_columns = stationInfo["Columns"].iloc[0]
-                    print(max_rows, max_columns) #This for testing number and will be deleted
+                #Get row and col range
+                max_rows = stationInfo["Rows"].iloc[0]
+                max_columns = stationInfo["Columns"].iloc[0]
 
-                    #Create a list which contains all probability of station position
-                    available_position = []
-                    for rows in range(1, max_rows + 1):
-                        for cols in range(1, max_columns + 1):
-                            position = "%d,%d" % (rows, cols)
-                            available_position.append(position)
+                #Create a list which contains all probability of station position
+                available_position = []
+                for rows in range(1, max_rows + 1):
+                    for cols in range(1, max_columns + 1):
+                        position = "%d,%d" % (rows, cols)
+                        available_position.append(position)
 
-                    station_df = pd.read_excel(path, sheet_name=stationCode)
+                station_df = pd.read_excel(path, sheet_name=stationCode)
 
-                    #Enquire the existing stored locker list
-                    position_column = "Position"
-                    occupied_position = []
-                    if not station_df.empty and position_column in station_df.columns:
-                        occupied_position = station_df[position_column].dropna().tolist()
+                #Enquire the existing stored locker list
+                position_column = "Position"
+                occupied_position = []
+                if not station_df.empty and position_column in station_df.columns:
+                    occupied_position = station_df[position_column].dropna().tolist()
 
-                    #Find the first available position
-                    empty_position = None
-                    for position in available_position:
-                        if position not in occupied_position:
-                            empty_position = position
-                            break
+                #Find the first available position
+                empty_position = None
+                for position in available_position:
+                    if position not in occupied_position:
+                        empty_position = position
+                        break
 
-                    if empty_position is None:
-                        print("This station is full. Please use other station.")
-                        continue
+                if empty_position is None:
+                    print("This station is full. Please use other station.")
+                    continue
 
-                    #Find a row which both Rental ID and Position are empty to write data
-                    for index1, row1 in station_df.iterrows():
-                        if pd.isna(row1[position_column]) and pd.isna(row1["Rental ID"]):
-                            station_df.loc[index1, "Rental ID"] = rentalID
-                            station_df.loc[index1, "Position"] = empty_position
-                            break
+                row_updated = False
+                for index1, row1 in station_df.iterrows():
+                    if pd.isna(row1[position_column]) and pd.isna(row1["Rental ID"]):
+                        station_df.at[index1, "Rental ID"] = rentalID
+                        station_df.at[index1, "Position"] = empty_position
+                        row_updated = True
+                        break
 
-                    with pd.ExcelWriter(path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-                        df.to_excel(writer, sheet_name=stationCode, index=False)
+                #If empty row is not found, add a new row
+                if not row_updated:
+                    new_row = pd.DataFrame({"Rental ID": [rentalID],"Position": [empty_position]})
+                    station_df = pd.concat([station_df, new_row], ignore_index=True)
+
+                with pd.ExcelWriter(path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+                    station_df.to_excel(writer, sheet_name=stationCode, index=False)
+                    print("written")
+
+                print("Locker is moving to",stationCode,"(",empty_position,")")
+
+                #Write to “lockers” sheet
+                df = pd.read_excel(path, sheet_name="lockers")
+                search_row = df["Rental ID"] == rentalID
+                df.loc[search_row, "Location"] = stationCode
+                df["Position"] = df["Position"].astype('object')
+                df.loc[search_row, "Position"] = empty_position
+
+                with pd.ExcelWriter(path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="lockers", index=False)
+
+                print("-" * 50, "\n")
+                print("Locker allocated:", lockerID, " ", "Location:", "In transit", "\n")
+                print("Rental ID:", rentalID, "\n")
+                print("Start date:", startDate, "\n")
+                print("-" * 50)
+
+# <Return locker> Part
+if option == "3":
