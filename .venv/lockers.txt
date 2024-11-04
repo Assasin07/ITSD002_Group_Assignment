@@ -1,0 +1,11 @@
+10001:Central store:Occupied:7471089:10252746:05-Nov-2024
+10002:Central store:Occupied:3565155:10252746:05-Nov-2024
+10003:Central store:Available:::
+10004:Central store:Available:::
+10005:Central store:Available:::
+10006:Central store:Suspended:::
+10007:Central store:Available:::
+10008:Central store:Available:::
+10009:Central store:Suspended:::
+10010:Central store:Available:::
+10011:Central store:Available:::
