@@ -1,8 +1,8 @@
-NTU-ADB-01:Admin Building level 1 : 4 : 10 : Open
-NTU-N21-02:North Main Spine level 1 : 3 : 15 : Open
-NTU-N22-03:North Main Spine level 2 : 4 : 12 : Open
-NTU-N31-04:The Arc level 1 : 3 : 10 : Open
-NTU-N32-05:The Arc level 2 : 4 : 10 : Closed
-NTU-S31-06:The Hive level 1 : 3 :15 : Open
-NTU-S32-06:The Hive level 2 : 4 :15 : Open
-NTU-SSC-07:SSC level 2 : 4 : 12 : Open
+NTU-ADB-01:Admin Building level 1:4:10:Open
+NTU-N21-02:North Main Spine level 1:3:15:Open
+NTU-N22-03:North Main Spine level 2:4:12:Open
+NTU-N31-04:The Arc level 1:3:10:Open
+NTU-N32-05:The Arc level 2:4:10:Closed
+NTU-S31-06:The Hive level 1:3:15:Open
+NTU-S32-06:The Hive level 2:4:15:Open
+NTU-SSC-07:SSC level 2:4:12:Open
