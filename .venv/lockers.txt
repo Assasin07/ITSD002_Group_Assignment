@@ -1,5 +1,5 @@
-10001:Central store:Occupied:7471089:10252746:05-Nov-2024
-10002:Central store:Occupied:3565155:10252746:05-Nov-2024
+10001:NTU-N21-02:Occupied:1343343:10253442:06-Nov-2024
+10002:Central store:Occupied:6715596:10252730:06-Nov-2024
 10003:Central store:Available:::
 10004:Central store:Available:::
 10005:Central store:Available:::
