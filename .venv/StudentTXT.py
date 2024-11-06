@@ -321,5 +321,172 @@ while True:
 
 
 
+    elif option == '3':
+            def validate_locker_id_linear(locker_id):
+                with open('lockers.txt', 'r') as file:
+                    for line in file.readlines():
+                        data = line.strip().split(':')
+                        if locker_id == data[0]:
+                            return True
+                    return False
+
+
+            def validate_student_id_linear(student_id):
+                with open('students.txt', 'r') as file:
+                    for line in file.readlines():
+                        data = line.strip().split(':')
+                        if student_id == data[0]:
+                            return True
+                    return False
+
+
+            def get_locker_data(locker_id):
+                with open('lockers.txt', 'r') as file:
+                    for line in file.readlines():
+                        data = line.strip().split(':')
+                        if locker_id == data[0]:
+                            return data
+                return None
+
+
+            def update_locker_file(locker_data):
+                updated_lines = []
+                with open('lockers.txt', 'r') as file:
+                    lines = file.readlines()
+                    for line in lines:
+                        data = line.strip().split(':')
+                        if data[0] == locker_data[0]:
+                            #Update locker status to available, clear rental ID, student ID and start date
+                            locker_data[2] = "Available"
+                            locker_data[3] = ""
+                            locker_data[4] = ""
+                            locker_data[5] = ""
+                            updated_lines.append(':'.join(locker_data) + '\n')
+                        else:
+                            updated_lines.append(line)
+                with open('lockers.txt', 'w') as file:
+                    file.writelines(updated_lines)
+
+
+            def update_locker_location(locker_id, new_location):
+                print(f"Updating locker {locker_id} location to {new_location}")
+
+
+            # Get the student ID entered by the user
+            while True:
+                user_student_id = input("Please enter student ID:")
+                if not user_student_id.isdigit() or len(user_student_id) != 8:
+                    print("Please enter the correct student ID format")
+                else:
+                    if validate_student_id_linear(user_student_id):
+                        print("The student ID is valid.")
+                        break
+                    else:
+                        print("Invalid student id, please re-enter.")
+
+            # Get the locker ID entered by the user
+            while True:
+                user_locker_id = input("Please enter locker ID:")
+                if not user_locker_id.isdigit() or len(user_locker_id) != 5:
+                    print("Please enter the correct locker ID format")
+                else:
+                    if validate_locker_id_linear(user_locker_id):
+                        print('-' * 50)
+                        break
+                    else:
+                        print("Invalid locker id, please re-enter.")
+
+            # Verify that the student ID and locker ID are valid (using the user input ID obtained above).
+            if not validate_student_id_linear(user_student_id):
+                print("Invalid student ID.")
+                exit(1)
+            if not validate_locker_id_linear(user_locker_id):
+                print("Invalid locker ID.")
+                exit(1)
+            locker_data = get_locker_data(user_locker_id)
+            if locker_data is None:
+                print("Locker not found.")
+                exit(1)
+
+            # Check if the student ID and locker ID match
+            if locker_data[4] and int(locker_data[4]) != int(user_student_id):
+                print("This locker is rented by someone else.")
+                exit(1)
+
+            state = locker_data[2]
+            if state == "Available" or state == "Suspended":
+                print("This locker is available.")
+                exit(0)
+            else:
+                print(f"Locker allocated: {user_locker_id}")
+                print(f"Location: {locker_data[1]}")
+                print(f"Rental ID: {locker_data[3]}")
+                print(f"Start date: {locker_data[5]}")
+
+            confirmation = input("Confirm to return the locker? (yes/no): ")
+            if confirmation.lower() == "yes":
+                # Get the current date as the end date
+                end_date = datetime.now().strftime("%d-%b-%Y;%H:%M")
+
+                # Calculate mobile charges and number of moves
+                move_charges = 0
+                move_count = 0
+                rental_log_path = os.path.join('usagelog', str(locker_data[3]) + '.txt')
+                with open(rental_log_path, 'r') as file:
+                    lines = file.readlines()
+                    for line in lines[1:]:  # 从第二行开始计算移动费用，因为第一行是租赁记录
+                        if line.strip():
+                            data = line.strip().split(';')
+                            if len(data) >= 5 and data[4]:
+                                move_charges += float(data[4])
+                                move_count += 1
+                print(f"Move charges: ${move_charges:.2f} ({move_count} moves)")
+
+                # Calculate the total cost
+                total_charges = 2 + move_charges
+                print(f"Rental charge: $2.00")
+                print(f"Total charges for this rental: ${total_charges:.2f}")
+                print('-' * 50)
+
+                current_station = locker_data[1]
+
+                if current_station != "Central store":
+                    station_log_path = os.path.join('stationlog', f'{current_station}.txt')
+                    updated_station_logs = []
+                    with open(station_log_path, 'r') as file:
+                        for line in file.readlines():
+                            if line.strip() and line.split(':')[0] != locker_data[3]:
+                                updated_station_logs.append(line)
+                    with open(station_log_path, 'w') as file:
+                        file.writelines(updated_station_logs)
+
+                # Update locker status to available, clear rental ID, student ID, and start date
+                locker_data[2] = "Available"
+                locker_data[3] = ""
+                locker_data[4] = ""
+                locker_data[5] = ""
+                locker_data[1] = "Central store"
+
+                # If the current location is at the site, move the lockers back to the central warehouse
+                if locker_data[1] != "Central store":
+                    print(f"Moving locker back to Central store.")
+                    update_locker_location(user_locker_id, "Central store")
+
+                # Update locker information in lockers.txt file
+                update_locker_file(locker_data)
+
+                current_station = locker_data[1]
+
+
+                # Write the end date to the txt file named after the Rental ID, with a separate line
+                with open(rental_log_path, 'a') as file:
+                    file.write(f"{end_date};Locker return")
+
+                print("End date:", end_date)
+                print("Locker returned successfully.")
+                print('-' * 50)
+
+
+
     elif option == '0':
         break
