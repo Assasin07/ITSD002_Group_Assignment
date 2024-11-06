@@ -320,6 +320,53 @@ while True:
             break
 
 
+    elif option == '4':
+        students = load_students()
 
+        while True:
+            studentID = int(input('Enter Student ID: '))
+            student_found = False
+            for num in students:
+                if num['Student ID'] == studentID:
+                    student_found = True
+                    for row in "lockers":
+                        if row[0] in "lockers":
+                            print("-" * 50, "\n")
+                            print("Locker allocated:", lockerID, " ", "Location:", location, "\n")
+                            print("Rental ID:", rentalID, "\n")
+                            print("Start date:", startDate, "\n")
+                            print("-" * 50)
+
+                        else:
+                            print("No rental records ")
+
+
+                if not student_found:
+                    print('Invalid student ID, please re-enter.')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     elif option == '0':
         break
