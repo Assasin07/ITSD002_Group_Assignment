@@ -536,30 +536,20 @@ while True:
                             if not matching_lockers:
                                print('Sorry,', rentalID, 'is not your locker.')
                                break
+                                
                             for locker in matching_lockers:
-                               print("Usage History:")
-                               for usage_record in locker['Usage']:
-                                    print("Date","Time","Operation","Student ID")
-                                    print("-" * 50, "\n")
-                                    print(startDate,  ,"Locker rental",studentID)
-                                    print(startDate,  ,Location,studentID)
+                                print("Date","Time","Operation","Student ID")
+                                print("-" * 50, "\n")
+                                print(startDate,time_operation ,"Locker rental",studentID)
+                                print(startDate,time_operation ,Location,studentID)
+                                print("-" * 50, "\n")
+                                print('rental charge:',)
+                                print('move charges:',)
+                                print ('total charges for this rental:', )
+                                break
                                    
                                 
                         
-
-           
-
-                        
-
-
-
-
-
-
-
-
-
-                    
                             else:
                                  print("No rental records ")
 
