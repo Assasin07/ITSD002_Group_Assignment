@@ -489,6 +489,7 @@ while True:
 
     elif option == '4':
         students = load_students()
+        lockers = load_lockers()
 
         while True:
             studentID = int(input('Enter Student ID: '))
@@ -496,19 +497,79 @@ while True:
             for num in students:
                 if num['Student ID'] == studentID:
                     student_found = True
-                    for row in "lockers":
-                        if row[0] in "lockers":
+                    for locker in student['Lockers']:  
                             print("-" * 50, "\n")
                             print("Locker allocated:", lockerID, " ", "Location:", location, "\n")
                             print("Rental ID:", rentalID, "\n")
                             print("Start date:", startDate, "\n")
                             print("-" * 50)
+                            break
 
-                        else:
-                            print("No rental records ")
+                            else:
+                                 print("No rental records ")
 
 
-                if not student_found:
-                    print('Invalid student ID, please re-enter.')
+               if not student_found:
+                   print('Invalid student ID, please re-enter.')
+
+
+    elif option == '5':
+        students = load_students()
+        lockers = load_lockers()
+
+        while True:
+            studentID = int(input('Enter Student ID: '))
+            student_found = False
+            for num in students:
+                if num['Student ID'] == studentID:
+                    student_found = True
+                    for locker in student['Lockers']:  
+                            print("-" * 50, "\n")
+                            print("Locker allocated:", lockerID, " ", "Location:", location, "\n")
+                            print("Rental ID:", rentalID, "\n")
+                            print("Start date:", startDate, "\n")
+                            print("-" * 50)
+                            break
+                            rentalID = int(input("Enter Rental ID to view usage:"))
+                            matching_lockers = [locker for locker in student_lockers if locker['Rental ID'] == rentalID]
+
+                            if not matching_lockers:
+                               print('Sorry,', rentalID, 'is not your locker.')
+                               break
+                            for locker in matching_lockers:
+                               print("Usage History:")
+                               for usage_record in locker['Usage']:
+                                    print("Date","Time","Operation","Student ID")
+                                    print("-" * 50, "\n")
+                                    print(startDate,  ,"Locker rental",studentID)
+                                    print(startDate,  ,Location,studentID)
+                                   
+                                
+                        
+
+           
+
+                        
+
+
+
+
+
+
+
+
+
+                    
+                            else:
+                                 print("No rental records ")
+
+               if not student_found:
+                   print('Invalid student ID, please re-enter.')
+        
+        
+        
+
+
+        
     elif option == '0':
         break
