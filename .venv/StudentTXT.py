@@ -529,29 +529,41 @@ while True:
                             print("Rental ID:", rentalID, "\n")
                             print("Start date:", startDate, "\n")
                             print("-" * 50)
-                            break
+                          
+                        
                             rentalID = int(input("Enter Rental ID to view usage:"))
-                            matching_lockers = [locker for locker in student_lockers if locker['Rental ID'] == rentalID]
+                            valid_rental = False
+                            for locker in lockers:
+                                if locker['Rental ID'] == rental_id:
+                                    valid_rental = True
+                                    
+                                    #calculate rental and move charges
+                                    rental_days = (datetime.now() - datetime.strptime(locker['Start date],"%Y-%m-%d)).days
+                                    rental_cost = rental_days * 2
+                                    move_cost = locker['MoveCount'] * 0.20
+                                    total_cost = rental_cost + move_cost
 
-                            if not matching_lockers:
-                               print('Sorry,', rentalID, 'is not your locker.')
-                               break
-                                
-                            for locker in matching_lockers:
-                                print("Date","Time","Operation","Student ID")
-                                print("-" * 50, "\n")
-                                print(startDate,time_operation ,"Locker rental",studentID)
-                                print(startDate,time_operation ,Location,studentID)
-                                print("-" * 50, "\n")
-                                print('rental charge:',)
-                                print('move charges:',)
-                                print ('total charges for this rental:', )
-                                break
+                            
+
+                       
+                                    print("Date","Time","Operation","Student ID")
+                                    print("-" * 50, "\n")
+                                    print(startDate,time_operation ,"Locker rental",studentID)
+                                    print(startDate,time_operation ,Location,studentID)
+                                    print("-" * 50, "\n")
+                                    print('rental charge:', rental_cost)
+                                    print('move charges:,move cost)
+                                    print ('total charges for this rental:', total_cost)
+                                    break
+                                          
+                                if not valid_rental:
+                                    print('Invalid rental ID")
+                                          break
                                    
                                 
                         
-                            else:
-                                 print("No rental records ")
+                                else:
+                                    print("No rental records ")
 
                if not student_found:
                    print('Invalid student ID, please re-enter.')
