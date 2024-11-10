@@ -588,6 +588,7 @@ while True:
                              print("Usage log not found for this rental ID")
                          break
 
+
                 if not valid_rental:
                     print("Invalid rental ID or rental ID does not belong to this student")
             else:
