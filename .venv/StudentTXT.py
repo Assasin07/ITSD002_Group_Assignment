@@ -498,32 +498,26 @@ while True:
             student_found = False
             for student in students:
                 if student['Student ID'] == studentID:
-                    student_found = True
-                    student_lockers = [locker for locker in lockers if locker['Student ID'] == studentID]
-                    if student_lockers:
-                        for locker in student_lockers:
-                            print("-" * 50, "\n")
-                            print("Locker allocated:",locker['Locker ID'], " ", "Location:",locker['Location'],)
-                            print("Rental ID:", locker['Rental ID'])
-                            print("Start date:", locker['Start Date'])
-                            print("-" * 50)
-
-
-
-
-
-                    else:
-                        print("No rental records")
-
-
-
-
-
-
+                student_found = True
+                break
 
             if not student_found:
                 print('Invalid student ID, please re-enter.')
-                break
+                continue
+
+            # Find all lockers rented by this student
+            student_lockers = [locker for locker in lockers if locker.get('Student ID') == studentID]
+            if student_lockers:
+                print(f"\nLockers allocated to Student ID {studentID}:")
+                for locker in student_lockers:
+                    print("\n" + "-" * 50)
+                    print(f"Locker allocated: {locker['Locker ID']}  Location: {locker['Location']}")
+                    print(f"Rental ID: {locker['Rental ID']}")
+                    print(f"Start date: {locker['Start Date']}")
+                    print("-" * 50)
+            else:
+                print("No rental records")
+            break
 
 
     elif option == '5':
@@ -543,55 +537,64 @@ while True:
             for student in students:
                 if student['Student ID'] == studentID:
                     student_found = True
-                    student_lockers = [locker for locker in lockers if locker['Student ID'] == studentID]
-                    if student_lockers:
-                        for locker in student_lockers:
-                            print("-" * 50, "\n")
-                            print("Locker allocated:",locker['Locker ID'], " ", "Location:",locker['Location'],)
-                            print("Rental ID:", locker['Rental ID'])
-                            print("Start date:", locker['Start Date'])
-                            print("-" * 50)
-                            break
+                    break
+
+            if not student_found:
+                print('Invalid student ID, please re-enter.')
+                continue
+
+            # Find all lockers rented by this student
+            student_lockers = [locker for locker in lockers if locker.get('Student ID') == studentID]
+
+            if student_lockers:
+                print(f"\nLockers allocated to Student ID {studentID}:")
+                for locker in student_lockers:
+                    print("\n" + "-" * 50)
+                    print(f"Locker allocated: {locker['Locker ID']}  Location: {locker['Location']}")
+                    print(f"Rental ID: {locker['Rental ID']}")
+                    print(f"Start date: {locker['Start Date']}")
+                    print("-" * 50)
+
 
 
                     rentalID = int(input("Enter Rental ID to view usage:"))
                     valid_rental = False
-                    for locker in lockers:
-                         if locker['Rental ID'] == locker['Rental ID']:
+                    for locker in student_lockers:
+                         if locker['Rental ID'] == rentalD:
                            valid_rental = True
 
-                        #calculate and set variables
-                           current_count = int(locker.get('Move Count', 0))
-                           rental_cost = 2
-                           move_charges = current_count * 0.20
-                           rental_time = get_rental_start_time('locker_id')
+                        # Read usage log for this rental
+                         try:
+                            usage_log_path = os.path.join('usage log', f"{rentalID}.txt")
+                            with open(usage_log_path, 'r') as file:
+                                print("\nDate       Time    Operation        Student ID")
+                                print("-" * 50)
 
-                           total_charges = 2 + move_charges
+                                lines = file.readlines()
+                                move_count = len(lines) - 1
+                                move_charges = move_count * 0.20
 
-                           print("Date","Time","Operation","Student ID")
-                           print("-" * 50, "\n")
-                           print(locker['Start Date'],locker.get('rental_time') ,"Locker rental",studentID)
-                           print(locker['Start Date'],locker.get('rental_time'),locker['Location'],studentID)
-                           print("-" * 50, "\n")
-                           print('rental charge:', rental_cost)
-                           print('move charges:',move_charges)
-                           print ('total charges for this rental:', total_charges)
-                           break
+                                for line in lines:
+                                    if line.strip():
+                                        data = line.strip().split(';')
+                                        if len(data) >= 4:
+                                            print(f"{data[0]:<10} {data[1]:<8} {data[2]:<15} {data[3]}")
 
-                         else:
-                             print("No rental records ")
+                                print("\n" + "-" * 50)
+                                print(f"Rental charge: $2.00")
+                                print(f"Move charges: ${move_charges:.2f} ({move_count} moves)")
+                                print(f"Total charges for this rental: ${(2.00 + move_charges):.2f}")
+                        except FileNotFoundError:
+                            print("Usage log not found for this rental ID")
+                        break
 
-                    if not valid_rental:
-                      print('Invalid rental ID')
-                      break
-
-
-
-
-
-            if not student_found:
-                print('Invalid student ID, please re-enter.')
-
+                if not valid_rental:
+                    print("Invalid rental ID or rental ID does not belong to this student")
+            else:
+                print("No rental records")
+            break
+    elif option == '0':
+         break
 
 
 
