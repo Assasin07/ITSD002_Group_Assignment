@@ -489,7 +489,7 @@ while True:
 
         
         
-        elif option == '4':
+    elif option == '4':
         students = load_students()
         lockers = load_lockers()
 
@@ -498,7 +498,7 @@ while True:
             student_found = False
             for student in students:
                 if student['Student ID'] == studentID:
-                student_found = True
+                    student_found = True
                 break
 
             if not student_found:
@@ -517,7 +517,7 @@ while True:
                     print("-" * 50)
             else:
                 print("No rental records")
-            break
+        break
 
 
     elif option == '5':
@@ -560,7 +560,7 @@ while True:
                     rentalID = int(input("Enter Rental ID to view usage:"))
                     valid_rental = False
                     for locker in student_lockers:
-                         if locker['Rental ID'] == rentalD:
+                         if locker['Rental ID'] == rentalID:
                            valid_rental = True
 
                         # Read usage log for this rental
@@ -584,19 +584,15 @@ while True:
                                 print(f"Rental charge: $2.00")
                                 print(f"Move charges: ${move_charges:.2f} ({move_count} moves)")
                                 print(f"Total charges for this rental: ${(2.00 + move_charges):.2f}")
-                        except FileNotFoundError:
-                            print("Usage log not found for this rental ID")
-                        break
+                         except FileNotFoundError:
+                             print("Usage log not found for this rental ID")
+                         break
 
                 if not valid_rental:
                     print("Invalid rental ID or rental ID does not belong to this student")
             else:
                 print("No rental records")
             break
-    elif option == '0':
-         break
-
-
 
 
 
